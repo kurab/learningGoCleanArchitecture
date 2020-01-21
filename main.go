@@ -5,20 +5,16 @@ import (
 
     "github.com/julienschmidt/httprouter"
 
-    "api/infrastructure/api/handler"
     "api/infrastructure/api/router"
     "api/infrastructure/datastore"
-    "api/interface/controllers"
-    "api/usecase/service"
+    "api/registry"
 )
 
 func main() {
     db := datastore.NewMySQL()
     r := httprouter.New()
-    rp := datastore.NewUserRepository(db)
-    s := service.NewUserService(rp)
-    c := controllers.NewUserController(s)
-    h := handler.NewUserHandler(c)
+    rg := registry.NewInteractor(db)
+    h := rg.NewAppHandler()
     router.NewRouter(r, h)
 
     defer db.Close()

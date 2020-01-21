@@ -1,15 +1,15 @@
 ```
 ├── domain
 ├── infrastructure
-├── interface
-│   └── controllers
-│       └── userController.go (UPDATED!)
+│   ├── api
+│   │   ├── handler
+│   │   │   ├── appHandler.go (NEW!)
+│   │   │   └── userHandler.go (UPDATED!)
+│   │   └── router
 │   └── datastore
-│       └── userRepository.go (NEW!)
+├── interface
+├── registry
+│   └── registry.go (NEW!)
 ├── usecase
-│   ├── repository
-│   │   └── userService.go (NEW!)
-│   └── service
-│       └── userService.go (UPDATED!)
 └── main.go (UPDATED!)
 ```
