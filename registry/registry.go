@@ -8,6 +8,7 @@ import (
     "api/infrastructure/api/validator"
     "api/infrastructure/datastore"
     "api/interface/controllers"
+    "api/interface/presenters"
     "api/usecase/service"
 )
 
@@ -62,9 +63,13 @@ func (i *interactor) NewPropertyController() controllers.PropertyController {
 }
 
 func (i *interactor) NewPropertyService() service.PropertyService {
-    return service.NewPropertyService(i.NewPropertyRepository())
+    return service.NewPropertyService(i.NewPropertyRepository(), i.NewPropertyPresenter())
 }
 
 func (i *interactor) NewPropertyRepository() datastore.PropertyRepository {
     return datastore.NewPropertyRepository(i.postgres)
+}
+
+func (i *interactor) NewPropertyPresenter() presenters.PropertyPresenter {
+    return presenters.NewPropertyPresenter()
 }

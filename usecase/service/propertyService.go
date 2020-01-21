@@ -3,6 +3,7 @@ package service
 import (
     "api/domain/model"
     "api/usecase/repository"
+    "api/usecase/presenter"
 )
 
 type PropertyService interface {
@@ -12,10 +13,11 @@ type PropertyService interface {
 
 type propertyService struct {
     PropertyRepository repository.PropertyRepository
+    PropertyPresenter presenter.PropertyPresenter
 }
 
-func NewPropertyService(pr repository.PropertyRepository) PropertyService {
-    return &propertyService{PropertyRepository: pr}
+func NewPropertyService(pr repository.PropertyRepository, pp presenter.PropertyPresenter) PropertyService {
+    return &propertyService{PropertyRepository: pr, PropertyPresenter: pp}
 }
 
 func (ps *propertyService) GetAll() (model.Properties, error) {
@@ -23,7 +25,7 @@ func (ps *propertyService) GetAll() (model.Properties, error) {
     if err != nil {
         return nil, err
     }
-    return props, nil
+    return ps.PropertyPresenter.ResponseProperties(props), nil
 }
 
 func (ps *propertyService) Get(id int) (model.Property, error) {
