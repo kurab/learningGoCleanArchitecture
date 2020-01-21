@@ -11,27 +11,8 @@ import (
     "github.com/julienschmidt/httprouter"
 
     "api/domain/model"
+    "api/infrastructure/datastore"
 )
-
-func connectDB() *gorm.DB {
-    connectString := fmt.Sprintf(
-        "%s:%s@tcp(%s:%s)/%s%s",
-        "user",
-        "secret",
-        "0.0.0.0",
-        "3306",
-        "goSample",
-        "?charset=utf8&parseTime=True&loc=Local",
-    )
-    db, err := gorm.Open("mysql", connectString)
-    if err != nil {
-        panic(err.Error())
-    }
-    db.LogMode(true)
-    db.Set("gorm:table_options", "ENGIN=InnoDB")
-
-    return db
-}
 
 func setRouter(router *httprouter.Router, db *gorm.DB) {
     // USER API
@@ -61,7 +42,7 @@ func setRouter(router *httprouter.Router, db *gorm.DB) {
 }
 
 func main() {
-    db := connectDB()
+    db := datastore.NewMySQL()
     r := httprouter.New()
     setRouter(r, db)
 

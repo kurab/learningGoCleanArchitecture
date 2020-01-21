@@ -1,6 +1,7 @@
 ```
 ├── domain
-│   └── model
-│       └── user.go (NEW!)
+├── infrastructure
+│   └── datastore
+│       └── dbMySQL.go (NEW!)
 └── main.go (UPDATED!)
 ```
