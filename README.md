@@ -5,7 +5,9 @@
 │   │   ├── handler
 │   │   │   └── userHandler.go (UPDATED!)
 │   │   └── router
-│   │       └── router.go (UPDATED!)
 │   └── datastore
+├── interface
+│   └── controllers
+│       └── userController.go (NEW!)
 └── main.go (UPDATED!)
 ```

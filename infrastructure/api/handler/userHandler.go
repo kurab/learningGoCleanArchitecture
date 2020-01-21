@@ -6,10 +6,10 @@ import (
     "net/http"
     "strconv"
 
-    "github.com/jinzhu/gorm"
     "github.com/julienschmidt/httprouter"
 
     "api/domain/model"
+    "api/interface/controllers"
 )
 
 type UserHandler interface {
@@ -19,35 +19,32 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-    db *gorm.DB
+    userController controllers.UserController
 }
 
-func NewUserHandler(db *gorm.DB) UserHandler {
-    return &userHandler{db: db}
+func NewUserHandler(uc controllers.UserController) UserHandler {
+    return &userHandler{userController: uc}
 }
 
 func (uh *userHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-    data := model.User{}
+    data := &model.User{}
     if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
         fmt.Fprintln(w, "Bad request: "+err.Error())
         return
     }
-    uh.db.NewRecord(data)
-    uh.db.Create(&data)
-    if uh.db.NewRecord(data) == false {
+    err := uh.userController.CreateUser(data)
+    if err == false {
         fmt.Fprintln(w, "registerd")
     }
 }
 
 func (uh *userHandler) GetAllUsers(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-    users := model.Users{}
-    uh.db.Find(&users)
-    json.NewEncoder(w).Encode(users)
+    u, _ := uh.userController.GetAllUsers()
+    json.NewEncoder(w).Encode(u)
 }
 
 func (uh *userHandler) GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     id, _ := strconv.Atoi(ps.ByName("id"))
-    user := model.User{}
-    uh.db.Where("Id = ?", id).First(&user)
-    json.NewEncoder(w).Encode(user)
+    u, _ := uh.userController.GetUser(id)
+    json.NewEncoder(w).Encode(u)
 }

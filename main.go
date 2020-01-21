@@ -8,12 +8,14 @@ import (
     "api/infrastructure/api/handler"
     "api/infrastructure/api/router"
     "api/infrastructure/datastore"
+    "api/interface/controllers"
 )
 
 func main() {
     db := datastore.NewMySQL()
     r := httprouter.New()
-    h := handler.NewUserHandler(db)
+    c := controllers.NewUserController(db)
+    h := handler.NewUserHandler(c)
     router.NewRouter(r, h)
 
     defer db.Close()
