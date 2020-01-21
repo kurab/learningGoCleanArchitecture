@@ -1,19 +1,15 @@
 ```
+├── config
+│   ├── config.go (NEW!)
+│   └── config.yml (NEW!)
 ├── domain
-│   └── model
-│       └── user.go (UPDATED!)
 ├── infrastructure
 │   ├── api
-│   │   ├── handler
-│   │   │   ├── appHandler.go
-│   │   │   └── userHandler.go (UPDATED!)
-│   │   └── router
-│   │   └── validator
-│   │       └── validator.go (NEW!)
 │   └── datastore
+│       ├── dbMySQL.go (UPDATED!)
+│       └── userRepository.go
 ├── interface
 ├── registry
-│   └── registry.go (UPDATED!)
 ├── usecase
 └── main.go (UPDATED!)
 ```
