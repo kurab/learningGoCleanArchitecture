@@ -2,8 +2,10 @@
 ├── domain
 ├── infrastructure
 │   ├── api
+│   │   ├── handler
+│   │   │   └── userHandler.go (UPDATED!)
 │   │   └── router
-│   │       └── router.go (NEW!)
+│   │       └── router.go (UPDATED!)
 │   └── datastore
 └── main.go (UPDATED!)
 ```
