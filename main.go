@@ -16,10 +16,11 @@ func main() {
     config.LoadConfig()
 
     db := datastore.NewMySQL()
+    ps := datastore.NewPostgreSQL()
     r := httprouter.New()
     v := validator.New()
 
-    rg := registry.NewInteractor(db, v)
+    rg := registry.NewInteractor(db, ps, v)
     h := rg.NewAppHandler()
 
     router.NewRouter(r, h)

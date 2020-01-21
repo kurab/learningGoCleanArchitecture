@@ -13,6 +13,7 @@ import (
 
 type interactor struct {
     db        *gorm.DB
+    postgres  *gorm.DB
     validator *validator.Validate
 }
 
@@ -20,14 +21,17 @@ type Interactor interface {
     NewAppHandler() handler.AppHandler
 }
 
-func NewInteractor(db *gorm.DB, v *validator.Validate) Interactor {
-    return &interactor{db: db, validator: v}
+func NewInteractor(db *gorm.DB, ps *gorm.DB, v *validator.Validate) Interactor {
+    return &interactor{db: db, postgres: ps, validator: v}
 }
 
 func (i *interactor) NewAppHandler() handler.AppHandler {
-    return handler.AppHandler{UserHandler: i.NewUserHandler()}
+    return handler.AppHandler{
+            UserHandler: i.NewUserHandler(),
+            PropertyHandler: i.NewPropertyHandler()}
 }
 
+// USER API
 func (i *interactor) NewUserHandler() handler.UserHandler {
     return handler.NewUserHandler(i.NewUserController(), i.NewCustomValidator())
 }
@@ -46,4 +50,21 @@ func (i *interactor) NewUserService() service.UserService {
 
 func (i *interactor) NewUserRepository() datastore.UserRepository {
     return datastore.NewUserRepository(i.db)
+}
+
+// PROPERTY API
+func (i *interactor) NewPropertyHandler() handler.PropertyHandler {
+    return handler.NewPropertyHandler(i.NewPropertyController())
+}
+
+func (i *interactor) NewPropertyController() controllers.PropertyController {
+    return controllers.NewPropertyController(i.NewPropertyService())
+}
+
+func (i *interactor) NewPropertyService() service.PropertyService {
+    return service.NewPropertyService(i.NewPropertyRepository())
+}
+
+func (i *interactor) NewPropertyRepository() datastore.PropertyRepository {
+    return datastore.NewPropertyRepository(i.postgres)
 }
