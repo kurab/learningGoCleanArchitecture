@@ -1,0 +1,4 @@
+go.sum
+/api
+*.swp
+*.bk
