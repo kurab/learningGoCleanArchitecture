@@ -1,7 +1,9 @@
 ```
 ├── domain
 ├── infrastructure
+│   ├── api
+│   │   └── router
+│   │       └── router.go (NEW!)
 │   └── datastore
-│       └── dbMySQL.go (NEW!)
 └── main.go (UPDATED!)
 ```
