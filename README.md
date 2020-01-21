@@ -4,7 +4,12 @@
 ├── interface
 │   └── controllers
 │       └── userController.go (UPDATED!)
+│   └── datastore
+│       └── userRepository.go (NEW!)
+├── usecase
+│   ├── repository
+│   │   └── userService.go (NEW!)
 │   └── service
-│       └── userService.go (NEW!)
+│       └── userService.go (UPDATED!)
 └── main.go (UPDATED!)
 ```

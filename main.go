@@ -15,7 +15,8 @@ import (
 func main() {
     db := datastore.NewMySQL()
     r := httprouter.New()
-    s := service.NewUserService(db)
+    rp := datastore.NewUserRepository(db)
+    s := service.NewUserService(rp)
     c := controllers.NewUserController(s)
     h := handler.NewUserHandler(c)
     router.NewRouter(r, h)

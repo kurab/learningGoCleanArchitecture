@@ -1,41 +1,37 @@
 package service
 
 import (
-    "github.com/jinzhu/gorm"
-
     "api/domain/model"
+    "api/usecase/repository"
 )
 
 type UserService interface {
     Create(data *model.User) bool
-    GetAll(users model.Users) (model.Users, error)
+    GetAll() (model.Users, error)
     Get(id int) (model.User, error)
 }
 
 type userService struct {
-    db *gorm.DB
+    UserRepository repository.UserRepository
 }
 
-func NewUserService(db *gorm.DB) UserService {
-    return &userService{db: db}
+func NewUserService(ur repository.UserRepository) UserService {
+    return &userService{UserRepository: ur}
 }
 
 func (us *userService) Create(data *model.User) bool {
-    us.db.NewRecord(data)
-    us.db.Create(&data)
-    return us.db.NewRecord(data)
+    return us.UserRepository.Store(data)
 }
 
-func (us *userService) GetAll(users model.Users) (model.Users, error) {
-    err := us.db.Find(&users).Error
+func (us *userService) GetAll() (model.Users, error) {
+    u, err := us.UserRepository.FindAll()
     if err != nil {
         return nil, err
     }
-    return users, nil
+    return u, nil
 }
 
 func (us *userService) Get(id int) (model.User, error) {
-    user := model.User{}
-    err := us.db.Where("Id = ?", id).First(&user).Error
-    return user, err
+    u, err := us.UserRepository.FindById(id)
+    return u, err
 }

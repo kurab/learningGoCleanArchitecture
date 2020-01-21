@@ -24,8 +24,7 @@ func (uc *userController) CreateUser(data *model.User) bool {
 }
 
 func (uc *userController) GetAllUsers() (model.Users, error) {
-    users := model.Users{}
-    us, err := uc.UserService.GetAll(users)
+    us, err := uc.UserService.GetAll()
     if err != nil {
         return nil, err
     }
