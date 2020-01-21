@@ -9,16 +9,9 @@ import (
     "github.com/jinzhu/gorm"
     _ "github.com/jinzhu/gorm/dialects/mysql"
     "github.com/julienschmidt/httprouter"
+
+    "api/domain/model"
 )
-
-type User struct {
-    Id    int    `gorm:"primary_key" json:"id"`
-    Name  string `json:"name"`
-    Age   int    `json:"age"`
-    Email string `json:"email"`
-}
-
-type Users []User
 
 func connectDB() *gorm.DB {
     connectString := fmt.Sprintf(
@@ -36,7 +29,6 @@ func connectDB() *gorm.DB {
     }
     db.LogMode(true)
     db.Set("gorm:table_options", "ENGIN=InnoDB")
-    db.AutoMigrate(&User{})
 
     return db
 }
@@ -44,7 +36,7 @@ func connectDB() *gorm.DB {
 func setRouter(router *httprouter.Router, db *gorm.DB) {
     // USER API
     router.POST("/api/user/register", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-        data := User{}
+        data := model.User{}
         if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
             fmt.Fprintln(w, "Bad request: "+err.Error())
             return
@@ -56,13 +48,13 @@ func setRouter(router *httprouter.Router, db *gorm.DB) {
         }
     })
     router.GET("/api/user/get", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-        users := Users{}
+        users := model.Users{}
         db.Find(&users)
         json.NewEncoder(w).Encode(users)
     })
     router.GET("/api/user/get/:id", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
         id, _ := strconv.Atoi(ps.ByName("id"))
-        user := User{}
+        user := model.User{}
         db.Where("Id = ?", id).First(&user)
         json.NewEncoder(w).Encode(user)
     })
