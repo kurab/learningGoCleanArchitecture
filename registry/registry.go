@@ -1,24 +1,27 @@
 package registry
 
 import (
+    "github.com/go-playground/validator/v10"
     "github.com/jinzhu/gorm"
 
     "api/infrastructure/api/handler"
+    "api/infrastructure/api/validator"
     "api/infrastructure/datastore"
     "api/interface/controllers"
     "api/usecase/service"
 )
 
 type interactor struct {
-    db *gorm.DB
+    db        *gorm.DB
+    validator *validator.Validate
 }
 
 type Interactor interface {
     NewAppHandler() handler.AppHandler
 }
 
-func NewInteractor(db *gorm.DB) Interactor {
-    return &interactor{db: db}
+func NewInteractor(db *gorm.DB, v *validator.Validate) Interactor {
+    return &interactor{db: db, validator: v}
 }
 
 func (i *interactor) NewAppHandler() handler.AppHandler {
@@ -26,7 +29,11 @@ func (i *interactor) NewAppHandler() handler.AppHandler {
 }
 
 func (i *interactor) NewUserHandler() handler.UserHandler {
-    return handler.NewUserHandler(i.NewUserController())
+    return handler.NewUserHandler(i.NewUserController(), i.NewCustomValidator())
+}
+
+func (i *interactor) NewCustomValidator() validation.CustomValidator {
+    return validation.NewCustomValidator(i.validator)
 }
 
 func (i *interactor) NewUserController() controllers.UserController {

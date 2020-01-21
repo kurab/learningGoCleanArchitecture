@@ -9,6 +9,7 @@ import (
     "github.com/julienschmidt/httprouter"
 
     "api/domain/model"
+    "api/infrastructure/api/validator"
     "api/interface/controllers"
 )
 
@@ -19,11 +20,12 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-    userController controllers.UserController
+    UserController controllers.UserController
+    Validator      validation.CustomValidator
 }
 
-func NewUserHandler(uc controllers.UserController) UserHandler {
-    return &userHandler{userController: uc}
+func NewUserHandler(uc controllers.UserController, v validation.CustomValidator) UserHandler {
+    return &userHandler{UserController: uc, Validator: v}
 }
 
 func (uh *userHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -32,19 +34,24 @@ func (uh *userHandler) CreateUser(w http.ResponseWriter, r *http.Request, _ http
         fmt.Fprintln(w, "Bad request: "+err.Error())
         return
     }
-    err := uh.userController.CreateUser(data)
+    if err := uh.Validator.Validate(data); err != nil {
+        fmt.Fprintln(w, "Validation error: "+err.Error())
+        return
+    }
+
+    err := uh.UserController.CreateUser(data)
     if err == false {
         fmt.Fprintln(w, "registerd")
     }
 }
 
 func (uh *userHandler) GetAllUsers(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-    u, _ := uh.userController.GetAllUsers()
+    u, _ := uh.UserController.GetAllUsers()
     json.NewEncoder(w).Encode(u)
 }
 
 func (uh *userHandler) GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     id, _ := strconv.Atoi(ps.ByName("id"))
-    u, _ := uh.userController.GetUser(id)
+    u, _ := uh.UserController.GetUser(id)
     json.NewEncoder(w).Encode(u)
 }
