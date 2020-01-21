@@ -9,12 +9,14 @@ import (
     "api/infrastructure/api/router"
     "api/infrastructure/datastore"
     "api/interface/controllers"
+    "api/usecase/service"
 )
 
 func main() {
     db := datastore.NewMySQL()
     r := httprouter.New()
-    c := controllers.NewUserController(db)
+    s := service.NewUserService(db)
+    c := controllers.NewUserController(s)
     h := handler.NewUserHandler(c)
     router.NewRouter(r, h)
 

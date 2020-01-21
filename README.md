@@ -1,13 +1,10 @@
 ```
 ├── domain
 ├── infrastructure
-│   ├── api
-│   │   ├── handler
-│   │   │   └── userHandler.go (UPDATED!)
-│   │   └── router
-│   └── datastore
 ├── interface
 │   └── controllers
-│       └── userController.go (NEW!)
+│       └── userController.go (UPDATED!)
+│   └── service
+│       └── userService.go (NEW!)
 └── main.go (UPDATED!)
 ```
