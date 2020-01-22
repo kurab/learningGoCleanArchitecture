@@ -13,6 +13,7 @@ import (
 type PropertyHandler interface {
     GetAllProperties(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
     GetProperty(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+    GetPropertiesByPref(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type propertyHandler struct {
@@ -32,4 +33,10 @@ func (ph *propertyHandler) GetProperty(w http.ResponseWriter, r *http.Request, p
     id, _ := strconv.Atoi(ps.ByName("id"))
     prop, _ := ph.PropertyController.GetProperty(id)
     json.NewEncoder(w).Encode(prop)
+}
+
+func (ph *propertyHandler) GetPropertiesByPref(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    pref_cd, _ := strconv.Atoi(ps.ByName("pref_cd"))
+    props, _ := ph.PropertyController.GetPropertiesByPref(pref_cd)
+    json.NewEncoder(w).Encode(props)
 }

@@ -9,6 +9,7 @@ import (
 type PropertyRepository interface {
     FindAll() (model.Properties, error)
     FindById(id int) (model.Property, error)
+    FindByPref(pref_cd int) (model.Properties, error)
 }
 
 type propertyRepository struct {
@@ -32,4 +33,13 @@ func (pr *propertyRepository) FindById(id int) (model.Property, error) {
     prop := model.Property{}
     err := pr.db.Where("id = ?", id).First(&prop).Error
     return prop, err
+}
+
+func (pr *propertyRepository) FindByPref(pref_cd int) (model.Properties, error) {
+    props := model.Properties{}
+    err := pr.db.Where("pref_cd = ?", pref_cd).Where("flg_open = ?", true).Order("pref_cd").Order("price").Find(&props).Error
+    if err != nil {
+        return nil, err
+    }
+    return props, nil
 }

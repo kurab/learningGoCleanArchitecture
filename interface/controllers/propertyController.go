@@ -8,6 +8,7 @@ import (
 type PropertyController interface {
     GetAllProperties() (model.Properties, error)
     GetProperty(id int) (model.Property, error)
+    GetPropertiesByPref(pref_cd int) (model.Properties, error)
 }
 
 type propertyController struct {
@@ -29,4 +30,12 @@ func (pc *propertyController) GetAllProperties() (model.Properties, error) {
 func (pc *propertyController) GetProperty(id int) (model.Property, error) {
     prop, err := pc.PropertyService.Get(id)
     return prop, err
+}
+
+func (pc *propertyController) GetPropertiesByPref(pref_cd int) (model.Properties, error) {
+    props, err := pc.PropertyService.GetByPref(pref_cd)
+    if err != nil {
+        return nil, err
+    }
+    return props, nil
 }

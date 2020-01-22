@@ -15,4 +15,5 @@ func NewRouter(router *httprouter.Router, handler handler.AppHandler) {
     // PROPERTY API
     router.GET("/api/property/get", handler.PropertyHandler.GetAllProperties)
     router.GET("/api/property/get/:id", handler.PropertyHandler.GetProperty)
+    router.GET("/api/property/pref/get/:pref_cd", handler.PropertyHandler.GetPropertiesByPref)
 }
